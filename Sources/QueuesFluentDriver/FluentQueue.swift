@@ -48,6 +48,7 @@ public struct FluentQueue: AsyncQueue, Sendable {
             .run()
 
         /*
+        
         if let _ = try await self.sqlDB.select()
             .from(self.jobsTable)
             .where("id", .equal, id)
