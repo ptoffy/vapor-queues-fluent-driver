@@ -46,6 +46,44 @@ public struct FluentQueue: AsyncQueue, Sendable {
             )
             // .model(JobModel(id: id, queue: self.queueName, jobData: jobStorage), keyEncodingStrategy: .convertToSnakeCase) // because enums!
             .run()
+
+        /*
+        if let _ = try await self.sqlDB.select()
+            .from(self.jobsTable)
+            .where("id", .equal, id)
+            .first()
+        {
+            try await self.sqlDB.update(self.jobsTable)
+                .set("id", to: SQLLiteral.string(id.string))
+                .set("queue_name", to: SQLBind(self.queueName.string))
+                .set("job_name", to: SQLBind(jobStorage.jobName))
+                .set("queued_at", to: SQLBind(jobStorage.queuedAt))
+                .set("delay_until", to: SQLBind(jobStorage.delayUntil))
+                .set("state", to: SQLLiteral.literal(StoredJobState.initial))
+                .set("max_retry_count", to: SQLBind(jobStorage.maxRetryCount))
+                .set("attempts", to: SQLBind(jobStorage.attempts))
+                .set("payload", to: Data(jobStorage.payload))
+                .set("updated_at", to: .now())
+                .run()
+        } else {
+            try await self.sqlDB.insert(into: self.jobsTable)
+                .columns("id", "queue_name", "job_name", "queued_at", "delay_until", "state", "max_retry_count", "attempts", "payload", "updated_at")
+                .values(
+                    .bind(id),
+                    .bind(self.queueName),
+                    .bind(jobStorage.jobName),
+                    .bind(jobStorage.queuedAt),
+                    .bind(jobStorage.delayUntil),
+                    .literal(StoredJobState.initial),
+                    .bind(jobStorage.maxRetryCount),
+                    .bind(jobStorage.attempts),
+                    .bind(Data(jobStorage.payload)),
+                    .now()
+                )
+                // .model(JobModel(id: id, queue: self.queueName, jobData: jobStorage), keyEncodingStrategy: .convertToSnakeCase) // because enums!
+                .run()
+        }
+        */
     }
     
     // See `Queue.clear(_:)`.
