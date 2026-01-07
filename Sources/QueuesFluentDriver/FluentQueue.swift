@@ -30,25 +30,6 @@ public struct FluentQueue: AsyncQueue, Sendable {
     
     // See `Queue.set(_:to:)`.
     public func set(_ id: JobIdentifier, to jobStorage: JobData) async throws {
-        try await self.sqlDB.insert(into: self.jobsTable)
-            .columns("id", "queue_name", "job_name", "queued_at", "delay_until", "state", "max_retry_count", "attempts", "payload", "updated_at")
-            .values(
-                .bind(id),
-                .bind(self.queueName),
-                .bind(jobStorage.jobName),
-                .bind(jobStorage.queuedAt),
-                .bind(jobStorage.delayUntil),
-                .literal(StoredJobState.initial),
-                .bind(jobStorage.maxRetryCount),
-                .bind(jobStorage.attempts),
-                .bind(Data(jobStorage.payload)),
-                .now()
-            )
-            // .model(JobModel(id: id, queue: self.queueName, jobData: jobStorage), keyEncodingStrategy: .convertToSnakeCase) // because enums!
-            .run()
-
-        /*
-        
         if let _ = try await self.sqlDB.select()
             .from(self.jobsTable)
             .where("id", .equal, id)
@@ -84,7 +65,6 @@ public struct FluentQueue: AsyncQueue, Sendable {
                 // .model(JobModel(id: id, queue: self.queueName, jobData: jobStorage), keyEncodingStrategy: .convertToSnakeCase) // because enums!
                 .run()
         }
-        */
     }
     
     // See `Queue.clear(_:)`.
